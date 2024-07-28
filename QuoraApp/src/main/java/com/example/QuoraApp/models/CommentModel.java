@@ -10,11 +10,11 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class AnswerModel {
-
+public class CommentModel {
     @Id
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID comment_id;
 
     @Column(nullable = false)
     private String text;
@@ -23,14 +23,16 @@ public class AnswerModel {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+
     @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
-    private QuestionModel question;
+    @JoinColumn(name = "parent_comment_id")
+    private CommentModel parentComment;
 
+    @ManyToOne
+    @JoinColumn(name = "answer_id", nullable = false)
+    private AnswerModel answer;
 
-    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
-    private List<CommentModel> comments;
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    private List<CommentModel> replies;
 
-    @Transient
-    private Long userId;
 }
